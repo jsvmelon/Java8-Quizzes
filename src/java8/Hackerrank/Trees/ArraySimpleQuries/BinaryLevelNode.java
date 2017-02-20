@@ -1,7 +1,5 @@
 package java8.Hackerrank.Trees.ArraySimpleQuries;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -63,7 +61,6 @@ public class BinaryLevelNode<T> {
         this.parent = parent;
     }
 
-    @Contract("null, null -> fail")
     private BinaryLevelNode(BinaryLevelNode<T> left, BinaryLevelNode<T> right) {
         this();
         // sanity checks
@@ -126,7 +123,8 @@ public class BinaryLevelNode<T> {
             root.isComplete = root.left.isComplete && root.right.isComplete; // should be false actually
         } else {
             BinaryLevelNode<T> candidate = getLeftorphanNodeAtHeight(node.height + 1,
-                    (BinaryLevelNode<T> b) -> {return b.left;});
+                    (BinaryLevelNode<T> b) -> {return b.left;},
+                    (BinaryLevelNode<T> b) -> {return b.right;});
             if (candidate.parent == null) { // it's the root
                 if (candidate.left == null) candidate.setLeft(node);
                 else { // a new root needs to be created
@@ -165,8 +163,8 @@ public class BinaryLevelNode<T> {
      * Or the root node.
      */
     public BinaryLevelNode<T> getLeftorphanNodeAtHeight(int height,
-                                                        Function<BinaryLevelNode, BinaryLevelNode> target,
-                                                        Function<BinaryLevelNode, BinaryLevelNode> opposite) {
+                                                        Function<BinaryLevelNode<T>, BinaryLevelNode<T>> target,
+                                                        Function<BinaryLevelNode<T>, BinaryLevelNode<T>> opposite) {
         BinaryLevelNode<T> node;
 
         // should move from the left-most leaf towards the root

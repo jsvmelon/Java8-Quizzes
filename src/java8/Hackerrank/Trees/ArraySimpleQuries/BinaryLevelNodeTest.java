@@ -11,14 +11,14 @@ public class BinaryLevelNodeTest {
     @Test
     public void getLeftNodeAtMinHeight() {
         BinaryLevelNode<Integer> root = new BinaryLevelNode<>(1).insertLeft(2);
-        assertEquals(root.getLeftorphanNodeAtHeight(1),root);
-        assertEquals(root.getLeftorphanNodeAtHeight(0),root);
+        assertEquals(root,root.getLeftorphanNodeAtHeight(1,(b) -> {return b.left;},(b) -> {return b.right;}));
+        assertEquals(root,root.getLeftorphanNodeAtHeight(0,(b) -> {return b.left;},(b) -> {return b.right;}));
 
         root = root.insertLeft(3).insertLeft(4).insertLeft(5);
         System.out.println(root);
-        assertEquals(root.getLeftorphanNodeAtHeight(0).right.data.intValue(), 5 );
-        assertEquals(root.getLeftorphanNodeAtHeight(1).right.data.intValue(), 5 );
-        assertEquals(root.getLeftorphanNodeAtHeight(2).height, 2);
+        assertEquals(5,root.getLeftorphanNodeAtHeight(0,(b) -> {return b.left;},(b) -> {return b.right;}).right.data.intValue());
+        assertEquals(5,root.getLeftorphanNodeAtHeight(1,(b) -> {return b.left;},(b) -> {return b.right;}).right.data.intValue());
+        assertEquals(2,root.getLeftorphanNodeAtHeight(2,(b) -> {return b.left;},(b) -> {return b.right;}).height);
     }
 
     @Test
