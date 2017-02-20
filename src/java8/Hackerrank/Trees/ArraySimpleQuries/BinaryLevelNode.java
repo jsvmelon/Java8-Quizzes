@@ -25,13 +25,13 @@ public class BinaryLevelNode<T> {
 
     T data;
 
-    public void setLeft(BinaryLevelNode left) {
+    public void setLeft(BinaryLevelNode<T> left) {
         this.left = left;
         left.parent = this;
         setIsComplete();
     }
 
-    public void setRight(BinaryLevelNode right) {
+    public void setRight(BinaryLevelNode<T> right) {
         this.right = right;
         right.parent = this;
         setIsComplete();
@@ -100,11 +100,11 @@ public class BinaryLevelNode<T> {
     }
 
     public BinaryLevelNode<T> insertLeft(T data) {
-        return insertLeft(new BinaryLevelNode(data));
+        return insertLeft(new BinaryLevelNode<>(data));
     }
 
     public BinaryLevelNode<T> insertRight(T data) {
-        return insertRight(new BinaryLevelNode());
+        return insertRight(new BinaryLevelNode<>());
     }
 
     // returns the root (which might be changed by this method)
@@ -119,12 +119,12 @@ public class BinaryLevelNode<T> {
                 branch = createLeftBranch(root.height - node.height, node);
             else
                 branch = node;
-            root = new BinaryLevelNode<T>(branch, root);
+            root = new BinaryLevelNode<>(branch, root);
             root.isComplete = root.left.isComplete && root.right.isComplete; // should be false actually
         } else {
             BinaryLevelNode<T> candidate = getLeftorphanNodeAtHeight(node.height + 1,
-                    (BinaryLevelNode<T> b) -> {return b.left;},
-                    (BinaryLevelNode<T> b) -> {return b.right;});
+                    (BinaryLevelNode<T> b) -> b.left,
+                    (BinaryLevelNode<T> b) -> b.right);
             if (candidate.parent == null) { // it's the root
                 if (candidate.left == null) candidate.setLeft(node);
                 else { // a new root needs to be created
@@ -147,8 +147,7 @@ public class BinaryLevelNode<T> {
 
         while (n.left != null || n.right != null) {
             if (n.left != null) n = n.left;
-            else if (n.right != null) n = n.right;
-            else return n;
+            else n = n.right;
         }
         return n;
     }
@@ -197,11 +196,11 @@ public class BinaryLevelNode<T> {
 
         int startHeight = node.height + length;
         int i = 1;
-        BinaryLevelNode<T> root = new BinaryLevelNode<T>();
+        BinaryLevelNode<T> root = new BinaryLevelNode<>();
         root.height = startHeight;
         BinaryLevelNode<T> n = root;
         while (i < length) {
-            n = new BinaryLevelNode<T>(n);
+            n = new BinaryLevelNode<>(n);
             n.height = startHeight - i;
             n.parent.setRight(n); // insert right to allow for further left inserts
             n.parent.isComplete = false;
@@ -228,7 +227,7 @@ public class BinaryLevelNode<T> {
      * @returns the root node (which may be changed by this method)
      */
     public BinaryLevelNode<T> moveNodesLeft(List<BinaryLevelNode<T>> nodes) {
-        BinaryLevelNode root = this;
+        BinaryLevelNode<T> root = this;
         // TODO
         return root;
     }
@@ -237,7 +236,7 @@ public class BinaryLevelNode<T> {
      * @returns the root node (which may be changed by this method)
      */
     public BinaryLevelNode<T> moveNodesRight(List<BinaryLevelNode<T>> nodes) {
-        BinaryLevelNode root = this;
+        BinaryLevelNode<T> root = this;
         // TODO
         return root;
     }
@@ -248,7 +247,7 @@ public class BinaryLevelNode<T> {
     }
 
     public List<T> getLeaves() {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
 
         if (left == null && right == null) {
             result.add(data);
